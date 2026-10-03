@@ -1,0 +1,383 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const BMVMSchoolApp());
+}
+
+class BMVMSchoolApp extends StatelessWidget {
+  const BMVMSchoolApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Baba Memorial Vidya Mandir',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF1E3A8A), // School Navy Blue
+          primary: const Color(0xFF1E3A8A),
+          secondary: const Color(0xFFEAB308), // Accent Gold/Yellow
+          surface: const Color(0xFFF8FAFC),
+        ),
+        cardTheme: CardTheme(
+          elevation: 2,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        ),
+      ),
+      home: const SchoolDashboardPage(),
+    );
+  }
+}
+
+class SchoolDashboardPage extends StatelessWidget {
+  const SchoolDashboardPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF1F5F9),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF1E3A8A),
+        foregroundColor: Colors.white,
+        elevation: 0,
+        title: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Baba Memorial Vidya Mandir',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              'Ward No. 03, Banmankhi, Purnea, Bihar',
+              style: TextStyle(fontSize: 11, color: Colors.white70),
+            ),
+          ],
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications_outlined),
+            onPressed: () => _showNotificationSheet(context),
+          ),
+          IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () => _showSchoolInfoDialog(context),
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Hero Welcome Banner
+            _buildHeroBanner(),
+
+            const SizedBox(height: 16),
+
+            // Quick Announcements Banner
+            _buildNoticeStrip(context),
+
+            const SizedBox(height: 20),
+
+            // Modules Grid
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: const Text(
+                'Student & Academic Services',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF0F172A)),
+              ),
+            ),
+            const SizedBox(height: 12),
+            _buildModulesGrid(context),
+
+            const SizedBox(height: 24),
+
+            // Recent Notices / Updates
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'School Notice Board',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF0F172A)),
+                  ),
+                  TextButton(
+                    onPressed: () {},
+                    child: const Text('View All'),
+                  ),
+                ],
+              ),
+            ),
+            _buildRecentNoticesList(),
+
+            const SizedBox(height: 24),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeroBanner() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: const BoxDecoration(
+        color: Color(0xFF1E3A8A),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(28),
+          bottomRight: Radius.circular(28),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 28,
+                backgroundColor: Colors.white,
+                child: const Icon(Icons.school, size: 34, color: Color(0xFF1E3A8A)),
+              ),
+              const SizedBox(width: 14),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Welcome to BMVM Portal',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      'Empowering Education & Discipline',
+                      style: TextStyle(fontSize: 13, color: Colors.white70),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.calendar_month, color: Colors.amber, size: 18),
+                SizedBox(width: 8),
+                Text(
+                  'Academic Session: 2026 – 2027',
+                  style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNoticeStrip(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFEF3C7),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFFFDE68A)),
+        ),
+        child: Row(
+          children: const [
+            Icon(Icons.campaign, color: Color(0xFFB45309)),
+            SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                'Admission open for Nursery to Class 10 for Session 2026-27.',
+                style: TextStyle(color: Color(0xFF92400E), fontSize: 13, fontWeight: FontWeight.w600),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildModulesGrid(BuildContext context) {
+    final modules = [
+      {'title': 'Attendance', 'icon': Icons.fact_check_outlined, 'color': Colors.blue},
+      {'title': 'Fee Payment', 'icon': Icons.account_balance_wallet_outlined, 'color': Colors.emerald},
+      {'title': 'Time Table', 'icon': Icons.schedule_outlined, 'color': Colors.purple},
+      {'title': 'Exam Results', 'icon': Icons.assignment_turned_in_outlined, 'color': Colors.orange},
+      {'title': 'Homework', 'icon': Icons.menu_book_outlined, 'color': Colors.indigo},
+      {'title': 'Teachers', 'icon': Icons.people_outline, 'color': Colors.teal},
+    ];
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: modules.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          childAspectRatio: 0.95,
+        ),
+        itemBuilder: (context, index) {
+          final item = modules[index];
+          final Color itemColor = (item['color'] as MaterialColor?) ?? Colors.blue;
+
+          return InkWell(
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Opening ${item['title']} module...')),
+              );
+            },
+            borderRadius: BorderRadius.circular(14),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.04),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 24,
+                    backgroundColor: itemColor.withOpacity(0.12),
+                    child: Icon(item['icon'] as IconData, color: itemColor, size: 26),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    item['title'] as String,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF1E293B)),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildRecentNoticesList() {
+    final notices = [
+      {
+        'title': 'Periodic Assessment Schedule Announced',
+        'date': 'Oct 02, 2026',
+        'tag': 'Exam',
+      },
+      {
+        'title': 'School Monthly Fee Due Reminder for October',
+        'date': 'Oct 01, 2026',
+        'tag': 'Accounts',
+      },
+      {
+        'title': 'Parent-Teacher Meeting (PTM) Scheduled for Saturday',
+        'date': 'Sep 28, 2026',
+        'tag': 'General',
+      },
+    ];
+
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      itemCount: notices.length,
+      separatorBuilder: (_, __) => const SizedBox(height: 10),
+      itemBuilder: (context, index) {
+        final notice = notices[index];
+        return Card(
+          margin: EdgeInsets.zero,
+          color: Colors.white,
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            leading: CircleAvatar(
+              backgroundColor: const Color(0xFFEFF6FF),
+              child: const Icon(Icons.article, color: Color(0xFF1E3A8A)),
+            ),
+            title: Text(
+              notice['title']!,
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+            ),
+            subtitle: Text(
+              '${notice['tag']} • ${notice['date']}',
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+            onTap: () {},
+          ),
+        );
+      },
+    );
+  }
+
+  void _showSchoolInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('School Information'),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Institution:', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text('Baba Memorial Vidya Mandir'),
+            SizedBox(height: 8),
+            Text('Location:', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text('Ward No. 03, Banmankhi, Purnea, Bihar - 854202'),
+            SizedBox(height: 8),
+            Text('Affiliation & Medium:', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text('Co-educational, Hindi & English Medium'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showNotificationSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            Text('Notifications', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            SizedBox(height: 12),
+            ListTile(
+              leading: Icon(Icons.event_available, color: Colors.green),
+              title: Text('Classes running as per regular schedule.'),
+              subtitle: Text('Today, 8:00 AM'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
